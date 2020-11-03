@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RestController;
  * @author Helen
  * @since 2020-11-02
  */
-@RestController
-@RequestMapping("/edu/teacher")
+//@RestController
+//@RequestMapping("/edu/teacher")
 public class TeacherController {
 
 }
