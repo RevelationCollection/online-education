@@ -1,0 +1,16 @@
+server:
+  port: 8120
+
+spring:
+  profiles:
+    active: dev
+  application:
+    name: service-oss
+
+aliyun:
+  oss:
+    endpoint: 你的endponit
+    keyid: 你的阿里云keyid
+    keysecret: 你的阿里云keysecret
+    #bucket可以在控制台创建，也可以使用java代码创建，注意先测试bucket是否已被占用
+    bucketname: guli-file
