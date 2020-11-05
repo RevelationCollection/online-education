@@ -1,5 +1,6 @@
 package com.study.edu.controller.admin;
 
+import com.alibaba.fastjson.JSON;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.study.edu.common.R;
@@ -10,6 +11,7 @@ import com.study.edu.service.TeacherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
@@ -19,6 +21,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/admin/edu/teacher")
 @CrossOrigin
+@Slf4j
 public class TeacherController {
     @Resource
     private TeacherService teacherService;
@@ -65,6 +68,7 @@ public class TeacherController {
     @ApiOperation("新增讲师")
     @PostMapping("save")
     public R save(@ApiParam(value = "讲师对象", required = true) @RequestBody Teacher teacher){
+        log.info("param",JSON.toJSON(teacher));
         boolean result = teacherService.save(teacher);
         if (result) {
             return R.ok().message("保存成功");

@@ -7,7 +7,7 @@ spring:
     name: service-edu # 服务名
   datasource: # mysql数据库连接
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://10.10.111.13:3306/dispatcher?serverTimezone=GMT%2B8
+    url: jdbc:mysql://10.10.111.13:3306/dispatcher?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
     username: dispatcher_rw
     password: haoshikisses
 

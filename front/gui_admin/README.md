@@ -107,3 +107,74 @@ start-build-setup
 6 webpack.dev.conf.js
     plugins
       new HtmlWebpackPlugin filename: 'index.html', //嵌入最后打包后的js所在的文件
+
+
+#一、前端项目组件分析
+1、三要素
+入口js：src/main.js
+入口页面：src/App.vue
+路由：src/router/index.js
+main.js 中引入了App.vue和 router/index.js，根据路由配置，App.vue中会显示相应的页面内容
+2、入口文件
+```javascript
+import App from './App'
+import router from './router'
+
+new Vue({
+  el: '#app',
+  router,//挂载路由模块到vue实例中
+  store,
+  render: h => h(App)//使用app组件完成页面渲染
+})
+```
+3、主页面模块
+src/App.vue
+```vue
+<router-view/>
+在此位置显示路由配置中指定的组件
+```
+4、路由模块
+src/router/index.js
+```javascript
+export const constantRouterMap = [
+  { path: '/login', component: () => import('@/views/login/index'), hidden: true },
+  //如果用户访问路由“/login”,则在App vue中显示“/views/login/index”中的内容
+```
+
+#三、前端项目布局分析
+1、路由模块
+src/router/index.js
+```javascript
+ // 讲师管理
+  {
+    path: '/teacher',
+    component: Layout, //应用布局 Layout vue
+    redirect: '/teacher/list',
+    name: 'Teacher',
+    meta: { title: '讲师管理' },
+    children: [
+      {
+        path: 'list',
+        name: 'TeacherList',
+        //当用户访问路由“/teacher/list”的时候，在路由出口处加载“/views/teacher/list.vue”组件
+        component: () => import('@/views/teacher/list'), 
+        
+        meta: { title: '讲师列表' }
+      },
+```
+2、布局模块
+src/views/layout/Layout.vue
+```vue
+//整个页面布局由三部分组成
+<sidebar class="sidebar-container"/>  //顶部边栏
+    <div class="main-container">  
+      <navbar/>   //侧边栏
+      <app-main/> //主内容区
+    </div>
+```
+3、核心内容区域
+src/views/layout/components/AppMain.vue
+```vue
+//路由出口，根据路由显示对应的页面组件
+<router-view :key="key"/>
+```

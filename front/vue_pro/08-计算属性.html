@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div id='app'>
+        <p>原始值: {{ message }}</p>
+        <!-- 1、插值数据绑定中使用表达式 -->
+        <p>1、反转消息: {{ message.split('').reverse().join('') }}</p>
+        <!-- 2、使用计算属性 -->
+        <p>2、反转消息: {{ reversedMessage }}</p>
+        <p>2、反转消息: {{ reversedMessage }}</p>
+        <!-- 3、使用方法 -->
+        <p>3、反转消息: {{ reversed() }}</p>   
+        <p>3、反转消息: {{ reversed() }}</p>   
+    </div>
+    
+    <script src="vue.min.js"> </script>
+    <script>
+        new Vue({
+            el: '#app',
+            data () {
+                return {
+                    message : 'hello'
+                }
+            },
+            //计算属性，计算属性基于缓存：在相关依赖发生改变时它们才会重新求值。
+            computed: {
+                reversedMessage () {
+                    console.log('计算属性执行')
+                    return this.message.split('').reverse().join('')
+                }
+            },
+            //方法将总会再次执行
+            methods:{
+                reversed () {
+                    console.log('方法执行')
+                    return this.message.split('').reverse().join('')
+                }
+            }
+        })
+
+    </script>
+</body>
+</html>
