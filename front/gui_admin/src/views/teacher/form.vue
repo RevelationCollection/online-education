@@ -31,9 +31,23 @@
       <el-form-item>
         <el-button :disabled="saveBtnDisabled" type="primary" @click="saveOrUpdate()">保存</el-button>
       </el-form-item>
+      <!-- 讲师头像 -->
+      <el-form-item label="讲师头像">
+        <el-upload
+          :show-file-list="false"
+          :on-success="handleAvatarSuccess"
+          :before-upload="beforeAvatarUpload"
+          :on-error="handleAvatarError"
+          class="avatar-uploader"
+          action="http://127.0.0.1:8120/admin/oss/file/upload?module=avatar">
+          <img v-if="teacher.avatar" :src="teacher.avatar">
+          <i v-else class="el-icon-plus avatar-uploader-icon"/>
+        </el-upload>
+      </el-form-item>
     </el-form>
   </div>
 </template>
+
 <script>
 import teacherApi from '@/api/teacher'
 
@@ -87,7 +101,60 @@ export default {
         this.$message.success(response.message)
       })
       this.$router.push({ path: '/teacher' })
+    },
+    // 上传成功回调
+    handleAvatarSuccess(res, file) {
+      console.log(res)
+      if (res.success) {
+        this.teacher.avatar = res.data.url
+        // 强制重新渲染
+        this.$forceUpdate()
+      } else {
+        this.$message.error('上传失败')
+      }
+    },
+    // 上传校验
+    beforeAvatarUpload(file) {
+      const isJPG = file.type === 'image/jpeg'
+      const isLt2M = file.size / 1024 / 1024 < 2
+      if (!isJPG) {
+        this.$message.error('上传头像图片只能是 JPG 格式!')
+      }
+      if (!isLt2M) {
+        this.$message.error('上传头像图片大小不能超过 2MB!')
+      }
+      return isJPG && isLt2M
+    },
+    // 错误处理
+    handleAvatarError() {
+      console.log('error')
+      this.$message.error('上传失败（http失败）')
     }
   }
 }
 </script>
+<style>
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
+</style>

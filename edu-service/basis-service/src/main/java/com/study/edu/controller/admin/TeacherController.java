@@ -97,4 +97,16 @@ public class TeacherController {
         }
     }
 
+    @ApiOperation("根据id列表删除讲师")
+    @DeleteMapping("batch-remove")
+    public R removeRows(
+            @ApiParam(value = "讲师id列表", required = true)
+            @RequestBody List<String> idList){
+        boolean result = teacherService.removeByIds(idList);
+        if(result){
+            return R.ok().message("删除成功");
+        }else{
+            return R.error().message("数据不存在");
+        }
+    }
 }

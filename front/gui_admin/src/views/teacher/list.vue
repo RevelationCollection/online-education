@@ -28,8 +28,19 @@
         <el-button type="default" @click="resetData()">清空</el-button>
       </el-form-item>
     </el-form>
+
+    <!-- 工具条 -->
+    <div style="margin-bottom: 10px;">
+      <el-button type="danger" size="mini" @click="batchRemove()">批量删除</el-button>
+    </div>
+
     <!-- 表格 -->
-    <el-table :data="list" border stripe>
+    <el-table
+      :data="list"
+      border
+      stripe
+      @selection-change="handleSelectionChange">
+      <el-table-column type="selection"/>
       <el-table-column label="#" width="50">
         <template slot-scope="scope">
           {{ (page-1) *limit + scope.$index+1 }}
@@ -78,7 +89,8 @@ export default {
       total: 0, // 总记录数
       page: 1, // 页码
       limit: 5, // 每页记录数
-      searchObj: {}// 查询条件
+      searchObj: {}, // 查询条件
+      multipleSelection: []// 批量删除选中的记录列表
     }
   },
   created() {
@@ -122,6 +134,41 @@ export default {
         console.log('error', error)
         // 当取消时会进入catch语句:error = 'cancel'
         // 当后端服务抛出异常时：error = 'error'
+        if (error === 'cancel') {
+          this.$message.info('取消删除')
+        }
+      })
+    },
+
+    // 当表格中多选项发生变化的时候触发
+    handleSelectionChange(selection) {
+      console.log(selection)
+      this.multipleSelection = selection
+    },
+
+    batchRemove() {
+      console.log('removeRows......')
+      if (this.multipleSelection.length === 0) {
+        this.$message.warning('请选择要删除的记录！')
+        return
+      }
+      this.$confirm('此操作将永久删除这些数据, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        // 点击确定，远程调用ajax
+        // 遍历selection，将id取出放入id列表
+        var idList = []
+        this.multipleSelection.forEach(item => {
+          idList.push(item.id)
+        })
+        // 调用api
+        return teacherApi.batchRemove(idList)
+      }).then((response) => {
+        this.fetchData()
+        this.$message.success(response.message)
+      }).catch(error => {
         if (error === 'cancel') {
           this.$message.info('取消删除')
         }
