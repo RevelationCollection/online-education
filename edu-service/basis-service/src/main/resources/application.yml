@@ -1,5 +1,6 @@
 server:
   port: 8110 # 服务端口
+
 spring:
   profiles:
     active: dev # 环境设置
@@ -10,7 +11,10 @@ spring:
     url: jdbc:mysql://10.10.111.13:3306/dispatcher?serverTimezone=GMT%2B8&characterEncoding=utf-8&useSSL=false
     username: dispatcher_rw
     password: haoshikisses
-
+  cloud:
+    nacos:
+      discovery:
+        server-addr: 127.0.0.1:8848
   jackson: #返回json的全局时间格式
     date-format: yyyy-MM-dd HH:mm:ss
     time-zone: GMT+8

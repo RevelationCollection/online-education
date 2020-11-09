@@ -7,6 +7,7 @@ import com.study.edu.common.R;
 import com.study.edu.common.Result;
 import com.study.edu.entity.Teacher;
 import com.study.edu.entity.vo.TeacherQueryVo;
+import com.study.edu.feign.OssFileService;
 import com.study.edu.service.TeacherService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -16,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 
 @Api("讲师管理")
 @RestController
@@ -25,6 +27,10 @@ import java.util.List;
 public class TeacherController {
     @Resource
     private TeacherService teacherService;
+
+    @Resource
+    private OssFileService ossFileService;
+
     @ApiOperation("所有讲师列表")
     @GetMapping("list")
     public Result<List<Teacher>> list(){
@@ -109,4 +115,22 @@ public class TeacherController {
             return R.error().message("数据不存在");
         }
     }
+
+    @ApiOperation("根据左关键字查询讲师名列表")
+    @GetMapping("list/name/{key}")
+    public R selectNameListByKey(
+            @ApiParam(value = "关键字",required = true)
+            @PathVariable
+                    String key){
+        List<Map<String, Object>> data = teacherService.selectNameListByKey(key);
+        return R.ok().data("nameList",data);
+    }
+
+    @ApiOperation("Nacos测试")
+    @GetMapping("test")
+    public R testNacos(){
+        ossFileService.test();
+        return R.ok();
+    }
+
 }

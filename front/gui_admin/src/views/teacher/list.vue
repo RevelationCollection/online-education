@@ -2,7 +2,14 @@
   <div class="app-container">
     <el-form :inline="true">
       <el-form-item>
-        <el-input v-model="searchObj.name" placeholder="讲师"/>
+        <!-- <el-input v-model="searchObj.name" placeholder="讲师"/> -->
+        <el-autocomplete
+          v-model="searchObj.name"
+          :fetch-suggestions="querySearch"
+          :trigger-on-focus="false"
+          class="inline-input"
+          placeholder="讲师"
+          value-key="name"/>
       </el-form-item>
       <el-form-item>
         <el-select v-model="searchObj.level" clearable placeholder="头衔">
@@ -172,6 +179,12 @@ export default {
         if (error === 'cancel') {
           this.$message.info('取消删除')
         }
+      })
+    },
+    // 模糊查询
+    querySearch(queryString, cb) {
+      teacherApi.selectNameListByKey(queryString).then(response => {
+        cb(response.data.nameList)
       })
     }
   }

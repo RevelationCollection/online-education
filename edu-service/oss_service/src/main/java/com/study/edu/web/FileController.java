@@ -45,4 +45,11 @@ public class FileController {
             throw new GuliException(ResultCodeEnum.FILE_UPLOAD_ERROR);
         }
     }
+
+    @ApiOperation("测试")
+    @RequestMapping("test")
+    public R test(){
+        log.info("oss test被调用");
+        return R.ok();
+    }
 }

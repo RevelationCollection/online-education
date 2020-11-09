@@ -49,5 +49,11 @@ export default {
       method: 'delete',
       data: idList
     })
+  },
+  selectNameListByKey(key) {
+    return request({
+      url: `/admin/edu/teacher/list/name/${key}`,
+      method: 'get'
+    })
   }
 }
