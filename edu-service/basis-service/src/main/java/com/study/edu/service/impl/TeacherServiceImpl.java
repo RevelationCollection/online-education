@@ -4,13 +4,16 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.study.edu.common.R;
 import com.study.edu.entity.Teacher;
 import com.study.edu.entity.vo.TeacherQueryVo;
+import com.study.edu.feign.OssFileService;
 import com.study.edu.mapper.TeacherMapper;
 import com.study.edu.service.TeacherService;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +27,9 @@ import java.util.Map;
  */
 @Service
 public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> implements TeacherService {
+
+    @Resource
+    private OssFileService ossFileService;
 
     @Override
     public IPage<Teacher> selectPage(Long page, Long limit, TeacherQueryVo teacherQueryVo) {
@@ -60,5 +66,19 @@ public class TeacherServiceImpl extends ServiceImpl<TeacherMapper, Teacher> impl
         queryWrapper.select("name");
         queryWrapper.likeRight("name",key);
         return baseMapper.selectMaps(queryWrapper);
+    }
+
+    @Override
+    public boolean removeAvatarById(String id) {
+        Teacher teacher = baseMapper.selectById(id);
+        if(teacher != null) {
+            String avatar = teacher.getAvatar();
+            if(!StringUtils.isEmpty(avatar)){
+                //删除图片
+                R r = ossFileService.removeFile(avatar);
+                return r.getSuccess();
+            }
+        }
+        return false;
     }
 }

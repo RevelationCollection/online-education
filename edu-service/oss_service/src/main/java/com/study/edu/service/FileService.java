@@ -12,4 +12,11 @@ public interface FileService {
      * @return 处理结果
      */
     String upload(InputStream inputStream, String module, String originalFilename);
+
+
+    /**
+     * 删除文件
+     * @param url
+     */
+    void removeFile(String url);
 }

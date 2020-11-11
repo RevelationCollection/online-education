@@ -50,6 +50,21 @@ public class FileController {
     @RequestMapping("test")
     public R test(){
         log.info("oss test被调用");
+        try {
+            Thread.sleep(3000L);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        log.info("oss test被调用 休眠结束");
         return R.ok();
+    }
+
+    @ApiOperation("文件删除")
+    @DeleteMapping("remove")
+    public R removeFile(
+            @ApiParam(value = "要删除的文件路径", required = true)
+            @RequestBody String url) {
+        fileService.removeFile(url);
+        return R.ok().message("文件?h除成功");
     }
 }

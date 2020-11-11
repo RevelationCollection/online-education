@@ -39,16 +39,6 @@ public class TeacherController {
     }
 
 
-    @ApiOperation(value = "根据ID删除讲师", notes = "根据ID删除讲师")
-    @DeleteMapping("remove/{id}")
-    public Result<Boolean> removeById(@ApiParam(value = "讲师ID", required = true) @PathVariable String id){
-        boolean flag = teacherService.removeById(id);
-        if (flag) {
-            return Result.ok().message("删除成功");
-        }
-        return Result.error().message("数据不存在");
-    }
-
     @ApiOperation("分页讲师列表")
     @GetMapping("show/list/{page}/{limit}")
     public R listPage(@ApiParam(value = "当前页码", required = true) @PathVariable Long page,
@@ -131,6 +121,20 @@ public class TeacherController {
     public R testNacos(){
         ossFileService.test();
         return R.ok();
+    }
+
+    @ApiOperation(value = "根据ID删除讲师", notes = "根据ID删除讲师，逻辑删除")
+    @DeleteMapping("remove/{id}")
+    public R removeById(@ApiParam(value = "讲师ID", required = true) @PathVariable String id){
+        //删除图片
+        teacherService.removeAvatarById(id);
+        //删除讲师
+        boolean result = teacherService.removeById(id);
+        if(result){
+            return R.ok().message("删除成功");
+        }else{
+            return R.error().message("数据不存在");
+        }
     }
 
 }
